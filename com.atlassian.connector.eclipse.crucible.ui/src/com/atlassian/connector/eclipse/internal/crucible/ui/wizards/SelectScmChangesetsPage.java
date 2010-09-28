@@ -55,7 +55,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
@@ -225,8 +224,6 @@ public class SelectScmChangesetsPage extends AbstractCrucibleWizardPage {
 
 	private final TaskRepository taskRepository;
 
-	private DefineRepositoryMappingButton mappingButton;
-
 	public SelectScmChangesetsPage(@NotNull TaskRepository repository) {
 		this(repository, new TreeSet<ICustomChangesetLogEntry>());
 	}
@@ -262,11 +259,6 @@ public class SelectScmChangesetsPage extends AbstractCrucibleWizardPage {
 
 		createRightViewer(composite);
 
-		mappingButton = new DefineRepositoryMappingButton(this, composite, getTaskRepository());
-
-		Control button = mappingButton.getControl();
-		GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.BEGINNING).applyTo(button);
-
 		Dialog.applyDialogFont(composite);
 		setControl(composite);
 	}
@@ -291,7 +283,6 @@ public class SelectScmChangesetsPage extends AbstractCrucibleWizardPage {
 							TaskRepositoryUtil.getScmRepositoryMappings(getTaskRepository()), scmPath);
 
 					if (sourceRepository == null) {
-						mappingButton.setMissingMapping(entry.getRepository().getScmPath());
 						setErrorMessage(NLS.bind("SCM repository path {0} is not mapped to Crucible repository.",
 								scmPath));
 						allFine = false;

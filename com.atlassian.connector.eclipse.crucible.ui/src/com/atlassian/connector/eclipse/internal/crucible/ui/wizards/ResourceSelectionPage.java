@@ -41,7 +41,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.jetbrains.annotations.NotNull;
 
@@ -62,8 +61,6 @@ public class ResourceSelectionPage extends AbstractCrucibleWizardPage {
 	private final ITeamUiResourceConnector teamConnector;
 
 	private final TaskRepository taskRepository;
-
-	private DefineRepositoryMappingButton mappingButtonFactory;
 
 	private ResourceSelectionTree resourceSelectionTree;
 
@@ -141,10 +138,6 @@ public class ResourceSelectionPage extends AbstractCrucibleWizardPage {
 				toolTip.hide();
 			}
 		});
-
-		mappingButtonFactory = new DefineRepositoryMappingButton(this, composite, taskRepository);
-		Control buttonControl = mappingButtonFactory.getControl();
-		GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.BEGINNING).applyTo(buttonControl);
 
 		populateResourcesTree();
 
