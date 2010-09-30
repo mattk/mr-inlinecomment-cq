@@ -16,13 +16,10 @@
 
 package com.atlassian.theplugin.commons.crucible.api.model;
 
-import org.jetbrains.annotations.Nullable;
-
-
 public class GeneralComment extends Comment {
 	private static final int HASH_INT = 31;
 
-	public GeneralComment(Review review, @Nullable Comment parentComment) {
+	public GeneralComment(Review review, Comment parentComment) {
 		super(review, parentComment);
 	}
 

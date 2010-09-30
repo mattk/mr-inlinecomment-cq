@@ -13,9 +13,8 @@ package com.atlassian.connector.eclipse.internal.crucible.ui.dialogs;
 
 import com.atlassian.connector.eclipse.internal.crucible.ui.CrucibleUiPlugin;
 import com.atlassian.connector.eclipse.ui.dialogs.ProgressDialog;
-import com.atlassian.theplugin.commons.crucible.api.model.CustomField;
-import com.atlassian.theplugin.commons.crucible.api.model.CustomFieldDef;
 import com.atlassian.theplugin.commons.crucible.api.model.Review;
+import com.sun.istack.internal.Nullable;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -24,7 +23,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
@@ -54,10 +52,8 @@ import org.eclipse.ui.contexts.IContextActivation;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.handlers.IHandlerService;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -68,10 +64,6 @@ public abstract class AbstractCrucibleCommentDialog extends ProgressDialog {
 	private final String taskId;
 
 	private Review review;
-
-	protected final HashMap<CustomFieldDef, ComboViewer> customCombos;
-
-	protected final HashMap<String, CustomField> customFieldSelections;
 
 	protected Button defectButton;
 
@@ -98,8 +90,6 @@ public abstract class AbstractCrucibleCommentDialog extends ProgressDialog {
 		this.review = review;
 		this.taskKey = taskKey;
 		this.taskId = taskId;
-		customCombos = new HashMap<CustomFieldDef, ComboViewer>();
-		customFieldSelections = new HashMap<String, CustomField>();
 	}
 
 	@Nullable
@@ -254,11 +244,6 @@ public abstract class AbstractCrucibleCommentDialog extends ProgressDialog {
 	@Override
 	protected Collection<? extends Control> getDisableableControls() {
 		Set<Control> controls = new HashSet<Control>(super.getDisableableControls());
-		if (customCombos.size() > 0) {
-			for (ComboViewer viewer : customCombos.values()) {
-				controls.add(viewer.getControl());
-			}
-		}
 
 		if (defectButton != null) {
 			controls.add(defectButton);

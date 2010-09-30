@@ -28,14 +28,13 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui.views.log;resolution:=optional,
  org.eclipse.ui.workbench.texteditor,
  org.eclipse.core.filesystem,
- com.atlassian.connector.eclipse.team.ui;bundle-version="2.2.0",
  org.jetbrains.annotations;resolution:=optional,
- com.atlassian.connector.eclipse.model;bundle-version="2.2.0"
+ com.atlassian.connector.eclipse.model;bundle-version="2.2.0",
+ com.atlassian.connector.eclipse.team.ui;bundle-version="2.2.0"
 Bundle-Activator: com.atlassian.connector.eclipse.internal.crucible.ui.CrucibleUiPlugin
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Export-Package: com.atlassian.connector.eclipse.internal.crucible;x-internal:=true,
- com.atlassian.connector.eclipse.internal.crucible.ui;x-friends:="com.atlassian.connector.eclipse.fisheye.ui",
+Export-Package: com.atlassian.connector.eclipse.internal.crucible.ui,
  com.atlassian.connector.eclipse.internal.crucible.ui.actions;x-internal:=true,
  com.atlassian.connector.eclipse.internal.crucible.ui.annotations;x-internal:=true,
  com.atlassian.connector.eclipse.internal.crucible.ui.commons;x-internal:=true,
@@ -43,6 +42,5 @@ Export-Package: com.atlassian.connector.eclipse.internal.crucible;x-internal:=tr
  com.atlassian.connector.eclipse.internal.crucible.ui.editor.parts;x-internal:=true,
  com.atlassian.connector.eclipse.internal.crucible.ui.editor.ruler;x-internal:=true,
  com.atlassian.connector.eclipse.internal.crucible.ui.operations;x-internal:=true,
- com.atlassian.connector.eclipse.internal.crucible.ui.util;x-internal:=true,
- com.atlassian.connector.eclipse.internal.crucible.ui.wizards;x-internal:=true
+ com.atlassian.connector.eclipse.internal.crucible.ui.util;x-internal:=true
 Bundle-Vendor: Atlassian

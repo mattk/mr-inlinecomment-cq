@@ -12,7 +12,6 @@
 package com.atlassian.connector.eclipse.internal.crucible.ui.editor.parts;
 
 import com.atlassian.connector.commons.misc.IntRanges;
-import com.atlassian.connector.eclipse.internal.crucible.IReviewChangeListenerAction;
 import com.atlassian.connector.eclipse.internal.crucible.core.CrucibleUtil;
 import com.atlassian.connector.eclipse.internal.crucible.ui.IReviewAction;
 import com.atlassian.theplugin.commons.VersionedVirtualFile;
@@ -29,7 +28,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.Section;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -48,13 +46,11 @@ public class VersionedCommentPart extends AbstractCommentPart<CommentPart> {
 
 	private VersionedComment versionedComment;
 
-	private CrucibleFileInfo crucibleFileInfo;
+	private final CrucibleFileInfo crucibleFileInfo;
 
 	private final List<IAction> customActions;
 
 	private Composite composite;
-
-	private final List<IReviewChangeListenerAction> reviewActions = new ArrayList<IReviewChangeListenerAction>();
 
 	public VersionedCommentPart(VersionedComment comment, Review review, CrucibleFileInfo crucibleFileInfo) {
 		super(comment, review);
@@ -85,7 +81,7 @@ public class VersionedCommentPart extends AbstractCommentPart<CommentPart> {
 		return text;
 	}
 
-	private String getLineInfo(IntRanges intRanges, @Nullable String revision) {
+	private String getLineInfo(IntRanges intRanges, String revision) {
 		String revStr = (revision != null) ? ("Rev: " + revision + ", ") : "";
 		if (intRanges.getTotalMin() == intRanges.getTotalMax()) {
 			return revStr + "Line: " + intRanges.getTotalMin();
@@ -159,8 +155,6 @@ public class VersionedCommentPart extends AbstractCommentPart<CommentPart> {
 	@Override
 	protected void createCustomAnnotations(Composite toolbarComposite, FormToolkit toolkit) {
 
-		reviewActions.clear();
-
 		for (IAction customAction : customActions) {
 			ImageHyperlink textHyperlink = toolkit.createImageHyperlink(toolbarComposite, SWT.NONE);
 			textHyperlink.setText(" ");
@@ -186,22 +180,6 @@ public class VersionedCommentPart extends AbstractCommentPart<CommentPart> {
 	@Override
 	protected Control update(Composite parentComposite, FormToolkit toolkit, Comment newComment, Review newReview) {
 		this.crucibleReview = newReview;
-		if (reviewActions != null) {
-
-			final Set<CrucibleFileInfo> files = crucibleReview.getFiles();
-			// FIXME we need new file here with refreshed comments collection (we have to find it as we do not get as param)
-			// workaround for PLE-727 (expandable part generic is an obstacle to solve that in the right way)
-			for (CrucibleFileInfo file : files) {
-				if (file.equals(crucibleFileInfo)) {
-					this.crucibleFileInfo = file;
-					break;
-				}
-			}
-
-			for (IReviewChangeListenerAction reviewAction : reviewActions) {
-				reviewAction.updateReview(newReview, crucibleFileInfo, (VersionedComment) newComment);
-			}
-		}
 		// TODO update the text 
 		if (newComment instanceof VersionedComment
 				&& !CrucibleUtil.areVersionedCommentsDeepEquals((VersionedComment) newComment, versionedComment)) {

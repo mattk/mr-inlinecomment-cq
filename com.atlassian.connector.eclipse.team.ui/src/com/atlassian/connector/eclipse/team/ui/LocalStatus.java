@@ -11,7 +11,6 @@
 
 package com.atlassian.connector.eclipse.team.ui;
 
-import org.jetbrains.annotations.Nullable;
 
 public class LocalStatus {
 	private final String scmPath;
@@ -30,8 +29,8 @@ public class LocalStatus {
 
 	private final String lastChangedRevision;
 
-	public LocalStatus(@Nullable String scmPath, @Nullable String revision, boolean added, boolean dirty,
-			boolean binary, boolean versioned, boolean ignored) {
+	public LocalStatus(String scmPath, String revision, boolean added, boolean dirty, boolean binary,
+			boolean versioned, boolean ignored) {
 		this.scmPath = scmPath;
 		this.revision = revision;
 		this.lastChangedRevision = revision;
@@ -42,8 +41,8 @@ public class LocalStatus {
 		this.ignored = ignored;
 	}
 
-	public LocalStatus(@Nullable String scmPath, @Nullable String revision, @Nullable String lastChangedRevision,
-			boolean added, boolean dirty, boolean binary, boolean versioned, boolean ignored) {
+	public LocalStatus(String scmPath, String revision, String lastChangedRevision, boolean added, boolean dirty,
+			boolean binary, boolean versioned, boolean ignored) {
 		this.scmPath = scmPath;
 		this.revision = revision;
 		this.lastChangedRevision = lastChangedRevision;
@@ -54,12 +53,10 @@ public class LocalStatus {
 		this.ignored = ignored;
 	}
 
-	@Nullable
 	public String getScmPath() {
 		return scmPath;
 	}
 
-	@Nullable
 	public String getRevision() {
 		return revision;
 	}
@@ -89,21 +86,20 @@ public class LocalStatus {
 		return new LocalStatus(null, null, false, false, false, false, false);
 	}
 
-	public static LocalStatus makeVersioned(@Nullable String scmPath, @Nullable String revision, boolean dirty,
-			boolean binary) {
+	public static LocalStatus makeVersioned(String scmPath, String revision, boolean dirty, boolean binary) {
 		return new LocalStatus(scmPath, revision, false, dirty, binary, true, false);
 	}
 
-	public static LocalStatus makeVersioned(@Nullable String scmPath, @Nullable String revision,
-			@Nullable String lastChangedRevision, boolean dirty, boolean binary) {
+	public static LocalStatus makeVersioned(String scmPath, String revision, String lastChangedRevision, boolean dirty,
+			boolean binary) {
 		return new LocalStatus(scmPath, revision, lastChangedRevision, false, dirty, binary, true, false);
 	}
 
-	public static LocalStatus makeVersioned(@Nullable String scmPath, @Nullable String revision) {
+	public static LocalStatus makeVersioned(String scmPath, String revision) {
 		return makeVersioned(scmPath, revision, false, false);
 	}
 
-	public static LocalStatus makeAdded(@Nullable String scmPath, boolean binary) {
+	public static LocalStatus makeAdded(String scmPath, boolean binary) {
 		return new LocalStatus(scmPath, null, true, true, binary, false, false);
 	}
 

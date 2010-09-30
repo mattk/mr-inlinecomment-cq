@@ -12,10 +12,9 @@
 package com.atlassian.connector.eclipse.internal.crucible.ui.util;
 
 import com.atlassian.connector.commons.misc.IntRanges;
-import com.atlassian.connector.eclipse.internal.crucible.core.CrucibleConstants;
 import com.atlassian.connector.eclipse.internal.crucible.ui.CrucibleUiUtil;
 import com.atlassian.theplugin.commons.crucible.api.model.Comment;
-import com.atlassian.theplugin.commons.crucible.api.model.CustomField;
+
 import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextEditor;
 import org.eclipse.mylyn.internal.wikitext.tasks.ui.editor.ConfluenceMarkupTaskEditorExtension;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -29,6 +28,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+
 import java.text.DateFormat;
 import java.util.Iterator;
 import java.util.Map;
@@ -48,8 +48,8 @@ public final class CommentUiUtil {
 		StringBuilder headerText = new StringBuilder();
 		headerText.append(comment.getAuthor().getDisplayName());
 		headerText.append("\n");
-		headerText.append(DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM)
-				.format(comment.getCreateDate()));
+		headerText.append(DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM).format(
+				comment.getCreateDate()));
 
 		if (comment.getReadState() != null) {
 			if (comment.getReadState().equals(Comment.ReadState.READ)) {
@@ -69,28 +69,6 @@ public final class CommentUiUtil {
 			headerText.append(", ");
 			headerText.append("Defect");
 
-			Map<String, CustomField> fields = comment.getCustomFields();
-			if (fields != null) {
-				boolean shouldCloseBracket = false;
-				if (fields.containsKey(CrucibleConstants.RANK_CUSTOM_FIELD_KEY)) {
-					headerText.append(" (");
-					shouldCloseBracket = true;
-					headerText.append(fields.get(CrucibleConstants.RANK_CUSTOM_FIELD_KEY).getValue());
-				}
-
-				if (fields.containsKey(CrucibleConstants.CLASSIFICATION_CUSTOM_FIELD_KEY)) {
-					if (shouldCloseBracket) {
-						headerText.append(",");
-					}
-					headerText.append(" ");
-					headerText.append(fields.get(CrucibleConstants.CLASSIFICATION_CUSTOM_FIELD_KEY)
-							.getValue());
-				}
-				if (shouldCloseBracket) {
-					headerText.append(")");
-				}
-
-			}
 		}
 		return headerText.toString();
 	}

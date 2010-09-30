@@ -11,14 +11,13 @@
 
 package com.atlassian.connector.eclipse.internal.crucible.ui.editor.parts;
 
-import com.atlassian.connector.eclipse.internal.crucible.core.CrucibleConstants;
 import com.atlassian.connector.eclipse.internal.crucible.core.CrucibleUtil;
+import com.atlassian.connector.eclipse.internal.crucible.ui.AvatarImages.AvatarSize;
 import com.atlassian.connector.eclipse.internal.crucible.ui.CrucibleImages;
 import com.atlassian.connector.eclipse.internal.crucible.ui.CrucibleUiPlugin;
 import com.atlassian.connector.eclipse.internal.crucible.ui.CrucibleUiUtil;
 import com.atlassian.connector.eclipse.internal.crucible.ui.IReviewAction;
 import com.atlassian.connector.eclipse.internal.crucible.ui.IReviewActionListener;
-import com.atlassian.connector.eclipse.internal.crucible.ui.AvatarImages.AvatarSize;
 import com.atlassian.connector.eclipse.internal.crucible.ui.actions.EditCommentAction;
 import com.atlassian.connector.eclipse.internal.crucible.ui.actions.PostDraftCommentAction;
 import com.atlassian.connector.eclipse.internal.crucible.ui.actions.RemoveCommentAction;
@@ -26,8 +25,8 @@ import com.atlassian.connector.eclipse.internal.crucible.ui.actions.ReplyToComme
 import com.atlassian.connector.eclipse.ui.commons.AtlassianUiUtil;
 import com.atlassian.connector.eclipse.ui.forms.SizeCachingComposite;
 import com.atlassian.theplugin.commons.crucible.api.model.Comment;
-import com.atlassian.theplugin.commons.crucible.api.model.CustomField;
 import com.atlassian.theplugin.commons.crucible.api.model.Review;
+
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -49,11 +48,11 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
+
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 
 /**
  * A UI part to represent a comment in a review
@@ -167,8 +166,9 @@ public abstract class AbstractCommentPart<V extends ExpandablePart<Comment, V>> 
 
 		final Label avatarLabel = new Label(twoColumnComposite, SWT.NONE);
 		toolkit.adapt(avatarLabel, false, false);
-		avatarLabel.setImage(CrucibleUiPlugin.getDefault().getAvatarsCache().getAvatarOrDefaultImage(
-				comment.getAuthor(), AvatarSize.LARGE));
+		avatarLabel.setImage(CrucibleUiPlugin.getDefault()
+				.getAvatarsCache()
+				.getAvatarOrDefaultImage(comment.getAuthor(), AvatarSize.LARGE));
 
 		GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.TOP).applyTo(avatarLabel);
 
@@ -181,46 +181,6 @@ public abstract class AbstractCommentPart<V extends ExpandablePart<Comment, V>> 
 		String commentText = comment.getMessage();
 
 		String customFieldsString = "";
-		if (comment.getCustomFields() != null && comment.getCustomFields().size() > 0) {
-
-			Map<String, CustomField> customFields = comment.getCustomFields();
-			CustomField classificationField = customFields.get(CrucibleConstants.CLASSIFICATION_CUSTOM_FIELD_KEY);
-			CustomField rankField = customFields.get(CrucibleConstants.RANK_CUSTOM_FIELD_KEY);
-
-			String classification = null;
-			if (classificationField != null) {
-				classification = classificationField.getValue();
-			}
-
-			String rank = null;
-			if (rankField != null) {
-				rank = rankField.getValue();
-			}
-
-			if (rank != null || classification != null) {
-				customFieldsString = "(";
-
-				if (comment.isDefectApproved() || comment.isDefectRaised()) {
-					customFieldsString += "Defect, ";
-				}
-			}
-
-			if (classification != null) {
-				customFieldsString += "Classification:" + classification;
-				if (rank != null) {
-					customFieldsString += ", ";
-				}
-			}
-
-			if (rank != null) {
-				customFieldsString += "Rank:" + rank;
-			}
-
-			if (customFieldsString.length() > 0) {
-				customFieldsString += ")";
-			}
-
-		}
 		if (customFieldsString.length() > 0) {
 			commentText += "  " + customFieldsString;
 		}

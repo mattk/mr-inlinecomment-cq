@@ -12,8 +12,6 @@
 package com.atlassian.connector.eclipse.team.ui;
 
 import org.eclipse.core.resources.IResource;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
@@ -36,7 +34,6 @@ public class TeamUiResourceManager {
 				ELEMENT_TEAM_CONNECTOR, ITeamUiResourceConnector.class);
 	}
 
-	@NotNull
 	public Set<ITeamUiResourceConnector> getTeamConnectors() {
 		return teamConnectors;
 	}
@@ -51,8 +48,7 @@ public class TeamUiResourceManager {
 	 *            name you're looking for, to make easier using this method we also accept nulls
 	 * @return
 	 */
-	@Nullable
-	public ITeamUiResourceConnector getTeamConnectorByName(@Nullable String name) {
+	public ITeamUiResourceConnector getTeamConnectorByName(String name) {
 		if (name != null) {
 			Set<ITeamUiResourceConnector> connectors = getTeamConnectors();
 			for (ITeamUiResourceConnector connector : connectors) {
@@ -64,8 +60,7 @@ public class TeamUiResourceManager {
 		return null;
 	}
 
-	@Nullable
-	public ITeamUiResourceConnector getTeamConnector(@NotNull IResource resource) {
+	public ITeamUiResourceConnector getTeamConnector(IResource resource) {
 		for (ITeamUiResourceConnector connector : getTeamConnectors()) {
 			if (connector.isResourceManagedBy(resource)) {
 				return connector;

@@ -13,16 +13,12 @@ package com.atlassian.connector.eclipse.internal.crucible.ui.dialogs;
 
 import com.atlassian.connector.commons.misc.IntRange;
 import com.atlassian.connector.commons.misc.IntRanges;
-import com.atlassian.connector.eclipse.internal.crucible.core.client.CrucibleClient;
 import com.atlassian.connector.eclipse.internal.crucible.ui.CrucibleUiPlugin;
 import com.atlassian.connector.eclipse.internal.crucible.ui.CrucibleUiUtil;
 import com.atlassian.connector.eclipse.team.ui.CrucibleFile;
 import com.atlassian.theplugin.commons.crucible.api.model.Comment;
 import com.atlassian.theplugin.commons.crucible.api.model.Comment.ReadState;
 import com.atlassian.theplugin.commons.crucible.api.model.CrucibleFileInfo;
-import com.atlassian.theplugin.commons.crucible.api.model.CustomFieldBean;
-import com.atlassian.theplugin.commons.crucible.api.model.CustomFieldDef;
-import com.atlassian.theplugin.commons.crucible.api.model.CustomFieldValue;
 import com.atlassian.theplugin.commons.crucible.api.model.Review;
 import com.atlassian.theplugin.commons.crucible.api.model.VersionedComment;
 
@@ -36,9 +32,6 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.ITextListener;
 import org.eclipse.jface.text.TextEvent;
 import org.eclipse.jface.text.source.LineRange;
-import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.ComboViewer;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -51,7 +44,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
@@ -83,14 +75,11 @@ public class CrucibleAddCommentDialog extends AbstractCrucibleCommentDialog {
 								+ commentLines.getNumberOfLines())));
 				comment.setLineRanges(lineRanges);
 				crucibleFile.getCrucibleFileInfo().addComment(comment);
-				CrucibleUiPlugin.getDefault().getActiveReviewManager().activeReviewUpdated();
 			}
 		}
 	}
 
 	private final String shellTitle;
-
-	private final CrucibleClient client;
 
 	private LineRange commentLines;
 
@@ -119,10 +108,9 @@ public class CrucibleAddCommentDialog extends AbstractCrucibleCommentDialog {
 	private Button saveDraftButton;
 
 	public CrucibleAddCommentDialog(Shell parentShell, String shellTitle, Review review, String taskKey, String taskId,
-			TaskRepository taskRepository, CrucibleClient client) {
+			TaskRepository taskRepository) {
 		super(parentShell, taskRepository, review, taskKey, taskId);
 		this.shellTitle = shellTitle;
-		this.client = client;
 	}
 
 	@Override
@@ -199,16 +187,6 @@ public class CrucibleAddCommentDialog extends AbstractCrucibleCommentDialog {
 	protected void processFields() {
 		newComment = commentText.getText();
 		if (defect) { // process custom field selection only when defect is selected
-			for (CustomFieldDef field : customCombos.keySet()) {
-				CustomFieldValue customValue = (CustomFieldValue) customCombos.get(field).getElementAt(
-						customCombos.get(field).getCombo().getSelectionIndex());
-				if (customValue != null) {
-					CustomFieldBean bean = new CustomFieldBean();
-					bean.setConfigVersion(field.getConfigVersion());
-					bean.setValue(customValue.getName());
-					customFieldSelections.put(field.getName(), bean);
-				}
-			}
 		}
 	}
 
@@ -223,31 +201,9 @@ public class CrucibleAddCommentDialog extends AbstractCrucibleCommentDialog {
 			public void widgetSelected(SelectionEvent event) {
 				defect = !defect;
 				// toggle combos
-				for (CustomFieldDef field : customCombos.keySet()) {
-					customCombos.get(field).getCombo().setEnabled(defect);
-				}
 			}
 		});
 		return defectButton;
-	}
-
-	protected void createCombo(Composite parent, final CustomFieldDef customField, int selection) {
-		((GridLayout) parent.getLayout()).numColumns++;
-		Label label = new Label(parent, SWT.NONE);
-		label.setText("Select " + customField.getName());
-		((GridLayout) parent.getLayout()).numColumns++;
-		ComboViewer comboViewer = new ComboViewer(parent);
-		comboViewer.setContentProvider(new ArrayContentProvider());
-		comboViewer.setLabelProvider(new LabelProvider() {
-			@Override
-			public String getText(Object element) {
-				CustomFieldValue fieldValue = (CustomFieldValue) element;
-				return fieldValue.getName();
-			}
-		});
-		comboViewer.setInput(customField.getValues());
-		comboViewer.getCombo().setEnabled(false);
-		customCombos.put(customField, comboViewer);
 	}
 
 	public boolean addComment() {

@@ -15,7 +15,6 @@ import com.atlassian.connector.eclipse.internal.crucible.ui.CrucibleUiPlugin;
 import com.atlassian.theplugin.commons.crucible.api.model.BasicReview;
 import com.atlassian.theplugin.commons.crucible.api.model.Comment;
 import com.atlassian.theplugin.commons.crucible.api.model.CrucibleFileInfo;
-import com.atlassian.theplugin.commons.crucible.api.model.CustomField;
 import com.atlassian.theplugin.commons.crucible.api.model.Review;
 import com.atlassian.theplugin.commons.crucible.api.model.Reviewer;
 import com.atlassian.theplugin.commons.crucible.api.model.State;
@@ -190,11 +189,6 @@ public final class CrucibleUtil {
 		result += ((comment.getCreateDate() == null) ? 0 : comment.getCreateDate().hashCode());
 		result += ((comment.getPermId() == null) ? 0 : comment.getPermId().getId().hashCode());
 
-		for (CustomField customValue : comment.getCustomFields().values()) {
-			result += ((customValue == null) ? 0 : customValue.getValue().hashCode());
-			result += ((customValue == null) ? 0 : customValue.getConfigVersion());
-		}
-
 		for (Comment reply : comment.getReplies()) {
 			result = createHashForGeneralComment(result, reply);
 		}
@@ -214,11 +208,6 @@ public final class CrucibleUtil {
 		result += ((comment.getAuthor() == null) ? 0 : comment.getAuthor().getUsername().hashCode());
 		result += ((comment.getCreateDate() == null) ? 0 : comment.getCreateDate().hashCode());
 		result += ((comment.getPermId() == null) ? 0 : comment.getPermId().getId().hashCode());
-
-		for (CustomField customValue : comment.getCustomFields().values()) {
-			result += ((customValue == null) ? 0 : customValue.getValue().hashCode());
-			result += ((customValue == null) ? 0 : customValue.getConfigVersion());
-		}
 
 		for (Comment reply : comment.getReplies()) {
 			if (reply instanceof VersionedComment) {
@@ -308,10 +297,6 @@ public final class CrucibleUtil {
 			return false;
 		}
 		if (c1.getCreateDate() != null ? !c1.getCreateDate().equals(c2.getCreateDate()) : c2.getCreateDate() != null) {
-			return false;
-		}
-		if (c1.getCustomFields() != null ? !c1.getCustomFields().equals(c2.getCustomFields())
-				: c2.getCustomFields() != null) {
 			return false;
 		}
 		if (c1.getMessage() != null ? !c1.getMessage().equals(c2.getMessage()) : c2.getMessage() != null) {

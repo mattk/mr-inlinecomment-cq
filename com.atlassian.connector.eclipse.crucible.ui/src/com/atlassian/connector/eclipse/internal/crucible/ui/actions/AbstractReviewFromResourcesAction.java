@@ -17,6 +17,7 @@ import com.atlassian.connector.eclipse.team.ui.ITeamUiResourceConnector;
 import com.atlassian.connector.eclipse.team.ui.ITeamUiResourceConnector.State;
 import com.atlassian.connector.eclipse.ui.actions.AbstractResourceAction;
 import com.atlassian.connector.eclipse.ui.commons.ResourceEditorBean;
+import com.sun.istack.internal.NotNull;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -29,7 +30,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;

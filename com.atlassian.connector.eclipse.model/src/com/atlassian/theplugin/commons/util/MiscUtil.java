@@ -15,7 +15,6 @@
  */
 package com.atlassian.theplugin.commons.util;
 
-import org.jetbrains.annotations.Nullable;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,27 +33,26 @@ public final class MiscUtil {
 	}
 
 	public static <K, V> HashMap<K, V> buildHashMap() {
-        return new HashMap<K, V>();
-    }
+		return new HashMap<K, V>();
+	}
 
 	public static <K, V> AbstractMap<K, V> buildConcurrentHashMap(int initialCapacity) {
 		return new ConcurrentHashMap<K, V>(initialCapacity);
 	}
 
-	public static <T> boolean isModified(@Nullable T a, @Nullable T b) {
-        return a != null ? !a.equals(b) : b != null;
-    }
+	public static <T> boolean isModified(T a, T b) {
+		return a != null ? !a.equals(b) : b != null;
+	}
 
-	public static <T> boolean isEqual(@Nullable T a, @Nullable T b) {
-        return a != null ? a.equals(b) : b == null;
-    }
+	public static <T> boolean isEqual(T a, T b) {
+		return a != null ? a.equals(b) : b == null;
+	}
 
+	public static <T> Set<T> buildHashSet() {
+		return new HashSet<T>();
+	}
 
-    public static <T> Set<T> buildHashSet() {
-        return new HashSet<T>();
-    }
-
-	public static <T> Set<T> buildHashSet(T ... elements) {
+	public static <T> Set<T> buildHashSet(T... elements) {
 		return new HashSet<T>(Arrays.asList(elements));
 	}
 
@@ -82,25 +80,26 @@ public final class MiscUtil {
 		return new TreeSet<T>(elements);
 	}
 
-    public static <T> ArrayList<T> buildArrayList() {
-        return new ArrayList<T>();
-    }
+	public static <T> ArrayList<T> buildArrayList() {
+		return new ArrayList<T>();
+	}
 
 	public static <T> ArrayList<T> buildArrayList(int initialCapacity) {
 		return new ArrayList<T>(initialCapacity);
 	}
 
 	/**
-     * Creates mutable {@link java.util.ArrayList} from given elements.
-     *
-     * @param elements elements which will be included in the newly created ArrayList
-     * @return newly created ArrayList
-     */
-    public static <T> ArrayList<T> buildArrayList(T ... elements) {
-        final ArrayList<T> tmp = new ArrayList<T>();
-        tmp.addAll(Arrays.asList(elements));
-        return tmp;
-    }
+	 * Creates mutable {@link java.util.ArrayList} from given elements.
+	 * 
+	 * @param elements
+	 *            elements which will be included in the newly created ArrayList
+	 * @return newly created ArrayList
+	 */
+	public static <T> ArrayList<T> buildArrayList(T... elements) {
+		final ArrayList<T> tmp = new ArrayList<T>();
+		tmp.addAll(Arrays.asList(elements));
+		return tmp;
+	}
 
 	public static <T> ArrayList<T> buildArrayList(Collection<T> collection) {
 		return new ArrayList<T>(collection);

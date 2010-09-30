@@ -16,8 +16,6 @@
 
 package com.atlassian.theplugin.commons.crucible.api.model;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import java.io.Serializable;
 
 @SuppressWarnings("serial")
@@ -25,7 +23,9 @@ public class Repository implements Serializable {
 	public static final String PLUGIN_TYPE = "plugin";
 
 	private final String name;
+
 	private final String type;
+
 	private final boolean enabled;
 
 	public Repository(String name, String type, boolean enabled) {
@@ -34,12 +34,10 @@ public class Repository implements Serializable {
 		this.enabled = enabled;
 	}
 
-	@NotNull
 	public String getName() {
 		return name;
 	}
 
-	@Nullable
 	public String getType() {
 		return type;
 	}

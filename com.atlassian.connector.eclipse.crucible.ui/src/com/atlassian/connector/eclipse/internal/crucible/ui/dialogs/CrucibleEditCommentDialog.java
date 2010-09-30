@@ -12,19 +12,12 @@
 package com.atlassian.connector.eclipse.internal.crucible.ui.dialogs;
 
 import com.atlassian.connector.eclipse.internal.crucible.core.CrucibleUtil;
-import com.atlassian.connector.eclipse.internal.crucible.core.client.CrucibleClient;
 import com.atlassian.connector.eclipse.internal.crucible.ui.CrucibleUiPlugin;
 import com.atlassian.theplugin.commons.crucible.api.model.Comment;
-import com.atlassian.theplugin.commons.crucible.api.model.CustomField;
-import com.atlassian.theplugin.commons.crucible.api.model.CustomFieldBean;
-import com.atlassian.theplugin.commons.crucible.api.model.CustomFieldDef;
-import com.atlassian.theplugin.commons.crucible.api.model.CustomFieldValue;
 import com.atlassian.theplugin.commons.crucible.api.model.GeneralComment;
 import com.atlassian.theplugin.commons.crucible.api.model.Review;
 import com.atlassian.theplugin.commons.crucible.api.model.VersionedComment;
-import com.atlassian.theplugin.commons.util.MiscUtil;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -34,13 +27,6 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.ITextListener;
 import org.eclipse.jface.text.TextEvent;
-import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.ComboViewer;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -53,12 +39,10 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 
 /**
  * Dialog shown to the user when they add a comment to a review
@@ -76,8 +60,7 @@ public class CrucibleEditCommentDialog extends AbstractCrucibleCommentDialog {
 		}
 
 		public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-			try {
-				monitor.beginTask("Updating comment", IProgressMonitor.UNKNOWN);
+			monitor.beginTask("Updating comment", IProgressMonitor.UNKNOWN);
 
 //				try {
 //					client.execute(new UpdateCommentRemoteOperation(taskRepository, getReview(), prepareNewComment(comment,
@@ -87,11 +70,6 @@ public class CrucibleEditCommentDialog extends AbstractCrucibleCommentDialog {
 //							e));
 //					throw e; // rethrow exception so dialog stays open and displays error message
 //				}
-				client.getReview(getTaskRepository(), getTaskId(), true, monitor);
-			} catch (CoreException e) {
-				throw new InvocationTargetException(e);
-
-			}
 
 		}
 	}
@@ -99,8 +77,6 @@ public class CrucibleEditCommentDialog extends AbstractCrucibleCommentDialog {
 	private final Comment comment;
 
 	private final String shellTitle;
-
-	private final CrucibleClient client;
 
 	private static final String UPDATE_LABEL = "&Update";
 
@@ -119,14 +95,13 @@ public class CrucibleEditCommentDialog extends AbstractCrucibleCommentDialog {
 	private Button saveDraftButton;
 
 	public CrucibleEditCommentDialog(Shell parentShell, String shellTitle, Review review, Comment comment,
-			String taskKey, String taskId, TaskRepository taskRepository, CrucibleClient client) {
+			String taskKey, String taskId, TaskRepository taskRepository) {
 		super(parentShell, taskRepository, review, taskKey, taskId);
 		this.shellTitle = shellTitle;
 		if (comment == null) {
 			throw new IllegalArgumentException("Comment must not be null");
 		}
 		this.comment = comment;
-		this.client = client;
 		this.defect = comment.isDefectRaised();
 	}
 
@@ -142,8 +117,6 @@ public class CrucibleEditCommentDialog extends AbstractCrucibleCommentDialog {
 		}
 
 		commentBean.setMessage(newComment);
-		commentBean.getCustomFields().clear();
-		commentBean.getCustomFields().putAll(customFieldSelections);
 //		commentBean.setAuthor(new User(client.getUsername()));
 		commentBean.setDefectRaised(defect);
 		if (commentBean.isDraft() && shouldPostIfDraft) {
@@ -227,8 +200,7 @@ public class CrucibleEditCommentDialog extends AbstractCrucibleCommentDialog {
 
 	private void updateButtonsState() {
 		processFields();
-		boolean areMetricsModified = !comment.isReply()
-				&& (defect != comment.isDefectRaised() || !customFieldSelections.equals(comment.getCustomFields()));
+		boolean areMetricsModified = !comment.isReply() && (defect != comment.isDefectRaised());
 		boolean isModified = !commentText.getText().equals(comment.getMessage()) || areMetricsModified;
 		if (updateButton != null && !updateButton.isDisposed()) {
 			updateButton.setEnabled(isModified);
@@ -241,18 +213,7 @@ public class CrucibleEditCommentDialog extends AbstractCrucibleCommentDialog {
 
 	protected void processFields() {
 		newComment = commentText.getText();
-		customFieldSelections.clear();
 		if (defect) { // process custom field selection only when defect is selected
-			for (CustomFieldDef field : customCombos.keySet()) {
-				CustomFieldValue customValue = (CustomFieldValue) customCombos.get(field).getElementAt(
-						customCombos.get(field).getCombo().getSelectionIndex());
-				if (customValue != null/* && customValue != EMPTY_CUSTOM_FIELD_VALUE */) {
-					CustomFieldBean bean = new CustomFieldBean();
-					bean.setConfigVersion(field.getConfigVersion());
-					bean.setValue(customValue.getName());
-					customFieldSelections.put(field.getName(), bean);
-				}
-			}
 		}
 	}
 
@@ -277,52 +238,6 @@ public class CrucibleEditCommentDialog extends AbstractCrucibleCommentDialog {
 	}
 
 	private void updateComboEnablement() {
-		for (CustomFieldDef field : customCombos.keySet()) {
-			customCombos.get(field).getCombo().setEnabled(defect);
-		}
-	}
-
-	private static final CustomFieldValue EMPTY_CUSTOM_FIELD_VALUE = new CustomFieldValue("", null);
-
-	protected void createCombo(Composite parent, final CustomFieldDef customField) {
-		((GridLayout) parent.getLayout()).numColumns++;
-		Label label = new Label(parent, SWT.NONE);
-		label.setText("Select " + customField.getName());
-		((GridLayout) parent.getLayout()).numColumns++;
-		ComboViewer comboViewer = new ComboViewer(parent);
-		comboViewer.setContentProvider(new ArrayContentProvider());
-
-		comboViewer.setLabelProvider(new LabelProvider() {
-			@Override
-			public String getText(Object element) {
-				CustomFieldValue fieldValue = (CustomFieldValue) element;
-				return fieldValue.getName();
-			}
-		});
-		final ArrayList<CustomFieldValue> values = MiscUtil.buildArrayList(EMPTY_CUSTOM_FIELD_VALUE);
-		values.addAll(customField.getValues());
-		comboViewer.setInput(values);
-		comboViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-			public void selectionChanged(SelectionChangedEvent event) {
-				updateButtonsState();
-			}
-		});
-
-		// setting default values for combo
-		final CustomField commentCustomField = comment.getCustomFields().get(customField.getName());
-		if (commentCustomField != null) {
-			for (CustomFieldValue value : customField.getValues()) {
-				if (value.getName().equals(commentCustomField.getValue())) {
-					ISelection selection = new StructuredSelection(MiscUtil.buildArrayList(value));
-					comboViewer.setSelection(selection, true);
-					break;
-				}
-			}
-		} else {
-			comboViewer.setSelection(new StructuredSelection(MiscUtil.buildArrayList(EMPTY_CUSTOM_FIELD_VALUE)), true);
-		}
-
-		customCombos.put(customField, comboViewer);
 	}
 
 	public void updateComment(boolean shouldPostIfDraft) {

@@ -17,12 +17,10 @@
 package com.atlassian.theplugin.commons.crucible.api.model;
 
 import com.atlassian.theplugin.commons.util.MiscUtil;
-import org.jetbrains.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public abstract class Comment {
 
@@ -42,32 +40,37 @@ public abstract class Comment {
 	}
 
 	private PermId permId;
-	private String message = null;
-	private boolean draft = false;
-	private boolean deleted = false;
-	private boolean defectRaised = false;
-	private boolean defectApproved = false;
-	private User author = null;
-	private Date createDate = new Date();
-    private ReadState readState;
 
-    private List<Comment> replies = new ArrayList<Comment>();
+	private String message = null;
+
+	private boolean draft = false;
+
+	private boolean deleted = false;
+
+	private boolean defectRaised = false;
+
+	private boolean defectApproved = false;
+
+	private User author = null;
+
+	private Date createDate = new Date();
+
+	private ReadState readState;
+
+	private List<Comment> replies = new ArrayList<Comment>();
 
 	private boolean isReply = false;
 
-	private final Map<String, CustomField> customFields = new HashMap<String, CustomField>();
 	private static final int HASH_INT = 31;
 
 	private final Review review;
 
-	@Nullable
 	private final Comment parentComment;
 
-	public Comment(Review review, @Nullable Comment parentComment) {
+	public Comment(Review review, Comment parentComment) {
 		this.review = review;
 		this.parentComment = parentComment;
 	}
-
 
 	public Comment(Comment bean) {
 		review = bean.getReview();
@@ -82,24 +85,17 @@ public abstract class Comment {
 		setAuthor(bean.getAuthor());
 		setAuthor(bean.getAuthor());
 		setReply(bean.isReply());
-        setReadState(bean.getReadState());
+		setReadState(bean.getReadState());
 
-		if (bean.getCustomFields() != null) {
-			for (Map.Entry<String, CustomField> entry : bean.getCustomFields().entrySet()) {
-				getCustomFields().put(entry.getKey(), new CustomFieldBean(entry.getValue()));
+		if (bean.getReplies() != null) {
+			for (Comment reply : bean.getReplies()) {
+				replies.add(createReplyBean(reply));
 			}
 		}
-
-        if (bean.getReplies() != null) {
-            for (Comment reply : bean.getReplies()) {
-                replies.add(createReplyBean(reply));
-            }
-        }
 	}
 
-    protected abstract Comment createReplyBean(Comment reply);
+	protected abstract Comment createReplyBean(Comment reply);
 
-	@Nullable
 	public Comment getParentComment() {
 		return parentComment;
 	}
@@ -108,7 +104,7 @@ public abstract class Comment {
 		return review;
 	}
 
-    public PermId getPermId() {
+	public PermId getPermId() {
 		return permId;
 	}
 
@@ -160,30 +156,32 @@ public abstract class Comment {
 		isReply = reply;
 	}
 
-    public void setReplies(List<Comment> replies) {
+	public void setReplies(List<Comment> replies) {
 		if (replies == null) {
 			this.replies = new ArrayList<Comment>();
 		} else {
-        	this.replies = replies;
+			this.replies = replies;
 		}
-    }
+	}
 
-    public void addReply(Comment comment) {
-        replies.add(comment);
-    }
+	public void addReply(Comment comment) {
+		replies.add(comment);
+	}
 
 	/**
 	 * Removes reply from this comment.
-	 * @param reply reply to remove
+	 * 
+	 * @param reply
+	 *            reply to remove
 	 * @return true if given reply was a reply to this comment and was removed, false otherwise
 	 */
-	public boolean removeReply(@Nullable Comment reply) {
+	public boolean removeReply(Comment reply) {
 		return replies.remove(reply);
 	}
 
-    public List<Comment> getReplies() {
-        return replies;
-    }
+	public List<Comment> getReplies() {
+		return replies;
+	}
 
 	public void setDefectApproved(boolean defectApproved) {
 		this.defectApproved = defectApproved;
@@ -207,19 +205,15 @@ public abstract class Comment {
 		}
 	}
 
-	public Map<String, CustomField> getCustomFields() {
-		return customFields;
+	public ReadState getReadState() {
+		return readState;
 	}
 
-    public ReadState getReadState() {
-        return readState;
-    }
+	public void setReadState(ReadState readState) {
+		this.readState = readState;
+	}
 
-    public void setReadState(ReadState readState) {
-        this.readState = readState;
-    }
-
-    @Override
+	@Override
 	public String toString() {
 		return getMessage();
 	}
@@ -271,9 +265,6 @@ public abstract class Comment {
 		if (createDate != null ? !createDate.equals(that.createDate) : that.createDate != null) {
 			return false;
 		}
-		if (customFields != null ? !customFields.equals(that.customFields) : that.customFields != null) {
-			return false;
-		}
 		if (message != null ? !message.equals(that.message) : that.message != null) {
 			return false;
 		}
@@ -282,8 +273,8 @@ public abstract class Comment {
 		}
 		//noinspection RedundantIfStatement
 		if (readState != null ? !readState.equals(that.readState) : that.readState != null) {
-            return false;
-        }
+			return false;
+		}
 
 		return true;
 	}
@@ -300,7 +291,6 @@ public abstract class Comment {
 		result = HASH_INT * result + (author != null ? author.hashCode() : 0);
 		result = HASH_INT * result + (createDate != null ? createDate.hashCode() : 0);
 		result = HASH_INT * result + (isReply ? 1 : 0);
-		result = HASH_INT * result + (customFields != null ? customFields.hashCode() : 0);
 		result = HASH_INT * result + (readState != null ? readState.ordinal() : 0);
 		return result;
 	}

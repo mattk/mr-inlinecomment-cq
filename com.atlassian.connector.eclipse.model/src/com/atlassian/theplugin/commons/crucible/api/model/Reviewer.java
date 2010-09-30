@@ -16,33 +16,32 @@
 
 package com.atlassian.theplugin.commons.crucible.api.model;
 
-import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("serial")
 public class Reviewer extends User {
 	private final boolean completed;
 
-	public Reviewer(@NotNull final String userName, final boolean completed) {
+	public Reviewer(final String userName, final boolean completed) {
 		super(userName);
 		this.completed = completed;
 	}
 
-	public Reviewer(@NotNull final String userName, final String displayName, final boolean completed) {
+	public Reviewer(final String userName, final String displayName, final boolean completed) {
 		this(userName, displayName, completed, null);
 	}
 
-	public Reviewer(@NotNull final String userName, final String displayName, final boolean completed, final String avatarUrl) {
+	public Reviewer(final String userName, final String displayName, final boolean completed, final String avatarUrl) {
 		super(userName, displayName, avatarUrl);
 		this.completed = completed;
 	}
 
-	public Reviewer(@NotNull final String userName, final String displayName) {
+	public Reviewer(final String userName, final String displayName) {
 		this(userName, displayName, false);
-    }
+	}
 
-    public boolean isCompleted() {
-        return completed;
-    }
+	public boolean isCompleted() {
+		return completed;
+	}
 
 	@Override
 	public int hashCode() {

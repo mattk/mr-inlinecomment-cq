@@ -11,25 +11,16 @@
 
 package com.atlassian.connector.eclipse.internal.crucible.ui.actions;
 
-import com.atlassian.connector.commons.crucible.api.model.ReviewModelUtil;
 import com.atlassian.connector.eclipse.internal.crucible.core.CrucibleUtil;
-import com.atlassian.connector.eclipse.internal.crucible.core.client.CrucibleClient;
 import com.atlassian.connector.eclipse.internal.crucible.ui.CrucibleImages;
 import com.atlassian.connector.eclipse.internal.crucible.ui.CrucibleUiPlugin;
 import com.atlassian.connector.eclipse.internal.crucible.ui.CrucibleUiUtil;
-import com.atlassian.connector.eclipse.internal.crucible.ui.dialogs.CrucibleAddCommentDialog;
-import com.atlassian.connector.eclipse.team.ui.CrucibleFile;
 import com.atlassian.theplugin.commons.crucible.api.model.Comment;
 import com.atlassian.theplugin.commons.crucible.api.model.CrucibleFileInfo;
 import com.atlassian.theplugin.commons.crucible.api.model.Review;
-import com.atlassian.theplugin.commons.crucible.api.model.VersionedComment;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
@@ -52,18 +43,19 @@ public class AddFileCommentAction extends BaseSelectionListenerAction {
 		TaskRepository taskRepository = CrucibleUiUtil.getCrucibleTaskRepository(review);
 		ITask task = CrucibleUiUtil.getCrucibleTask(review);
 
-		CrucibleClient client = CrucibleUiPlugin.getClient(taskRepository);
-		if (client == null) {
-			StatusHandler.log(new Status(IStatus.ERROR, CrucibleUiPlugin.PLUGIN_ID,
-					"Unable to get client, please try to refresh"));
-			return;
-		}
-
-		CrucibleAddCommentDialog commentDialog = new CrucibleAddCommentDialog(WorkbenchUtil.getShell(), getText(),
-				review, task.getTaskKey(), task.getTaskId(), taskRepository, client);
-
-		commentDialog.setReviewItem(new CrucibleFile(fileInfo, true));
-		commentDialog.open();
+		// TODO fix client
+//		CrucibleClient client = CrucibleUiPlugin.getClient(taskRepository);
+//		if (client == null) {
+//			StatusHandler.log(new Status(IStatus.ERROR, CrucibleUiPlugin.PLUGIN_ID,
+//					"Unable to get client, please try to refresh"));
+//			return;
+//		}
+//
+//		CrucibleAddCommentDialog commentDialog = new CrucibleAddCommentDialog(WorkbenchUtil.getShell(), getText(),
+//				review, task.getTaskKey(), task.getTaskId(), taskRepository, client);
+//
+//		commentDialog.setReviewItem(new CrucibleFile(fileInfo, true));
+//		commentDialog.open();
 	}
 
 	public AddFileCommentAction() {
@@ -96,10 +88,6 @@ public class AddFileCommentAction extends BaseSelectionListenerAction {
 
 		if (element instanceof Comment) {
 			this.review = CrucibleUiPlugin.getDefault().getActiveReviewManager().getActiveReview();
-			final VersionedComment parentVersionedComment = ReviewModelUtil.getParentVersionedComment((Comment) element);
-			if (parentVersionedComment != null) {
-				this.fileInfo = parentVersionedComment.getCrucibleFileInfo();
-			}
 			return true;
 		}
 

@@ -17,7 +17,6 @@ import com.atlassian.connector.eclipse.internal.crucible.ui.commons.CrucibleProj
 import com.atlassian.connector.eclipse.internal.crucible.ui.commons.CrucibleUserLabelProvider;
 import com.atlassian.connector.eclipse.internal.crucible.ui.editor.parts.ReviewersSelectionTreePart;
 import com.atlassian.theplugin.commons.crucible.api.model.BasicProject;
-import com.atlassian.theplugin.commons.crucible.api.model.ExtendedCrucibleProject;
 import com.atlassian.theplugin.commons.crucible.api.model.Review;
 import com.atlassian.theplugin.commons.crucible.api.model.ReviewType;
 import com.atlassian.theplugin.commons.crucible.api.model.User;
@@ -49,7 +48,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -363,7 +361,6 @@ public class CrucibleReviewDetailsPage extends WizardPage {
 		return false;
 	}
 
-	@Nullable
 	public Review getReview() {
 		final User author = getSelectedAuthor();
 		final BasicProject project = getSelectedProject();
@@ -413,7 +410,6 @@ public class CrucibleReviewDetailsPage extends WizardPage {
 		return startReview.getSelection();
 	}
 
-	@Nullable
 	BasicProject getSelectedProject() {
 		if (projectsComboViewer == null) {
 			return null;
@@ -438,20 +434,7 @@ public class CrucibleReviewDetailsPage extends WizardPage {
 		if (project != null) {
 			BasicProject details = CrucibleUiUtil.getCachedProject(taskRepository, project.getKey());
 
-			if (!(details instanceof ExtendedCrucibleProject)) {
-				details = CrucibleUiUtil.getCachedProject(taskRepository, project.getKey());
-			}
-
-			if (details instanceof ExtendedCrucibleProject
-					&& ((ExtendedCrucibleProject) details).getAllowedReviewers() != null
-					&& ((ExtendedCrucibleProject) details).getAllowedReviewers().size() > 0) {
-				Collection<String> allowedReviewersNames = ((ExtendedCrucibleProject) details).getAllowedReviewers();
-				final Collection<User> allowedReviewers = CrucibleUiUtil.getUsersFromUsernames(taskRepository,
-						allowedReviewersNames);
-				reviewersSelectionTreePart.setAllReviewers(allowedReviewers);
-			} else {
-				reviewersSelectionTreePart.setAllReviewers(CrucibleUiUtil.getCachedUsers(taskRepository));
-			}
+			reviewersSelectionTreePart.setAllReviewers(CrucibleUiUtil.getCachedUsers(taskRepository));
 
 			getWizard().getContainer().updateButtons();
 		}

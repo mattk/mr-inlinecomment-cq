@@ -20,7 +20,6 @@ import com.atlassian.connector.eclipse.internal.crucible.ui.annotations.Crucible
 import com.atlassian.connector.eclipse.team.ui.CrucibleFile;
 import com.atlassian.theplugin.commons.crucible.api.model.CrucibleFileInfo;
 import com.atlassian.theplugin.commons.crucible.api.model.Review;
-import com.atlassian.theplugin.commons.crucible.api.model.notification.CrucibleNotification;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -53,9 +52,7 @@ import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.rulers.IContributedRulerColumn;
 import org.eclipse.ui.texteditor.rulers.RulerColumnDescriptor;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
 import java.util.List;
 
 public class CommentAnnotationRulerColumn extends AbstractRulerColumn implements IContributedRulerColumn,
@@ -259,17 +256,13 @@ public class CommentAnnotationRulerColumn extends AbstractRulerColumn implements
 	/**
 	 * task and review might be null when called internally
 	 */
-	public void reviewDeactivated(@Nullable ITask task, @Nullable Review review) {
+	public void reviewDeactivated(ITask task, Review review) {
 		annotationModel = null;
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				redraw();
 			}
 		});
-	}
-
-	public void reviewUpdated(ITask task, Review review, Collection<CrucibleNotification> differences) {
-		reviewActivated(task, review);
 	}
 
 }

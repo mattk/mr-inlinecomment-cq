@@ -16,32 +16,35 @@
 
 package com.atlassian.theplugin.commons.crucible.api.model;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import java.io.Serializable;
 import java.util.Collection;
 
 @SuppressWarnings("serial")
 public class BasicProject implements Serializable {
 	private final String id;
+
 	private final String key;
+
 	private final String name;
 
 	private final Collection<String> defaultReviewers;
+
 	private final String defaultRepository;
+
 	private final boolean joiningAllowed;
+
 	private final Integer defaultDuration;
+
 	private final boolean moderatorEnabled;
 
-    private static final int HASH_INT = 31;
+	private static final int HASH_INT = 31;
 
-	public BasicProject(@NotNull String id, @NotNull String key, @NotNull String name) {
+	public BasicProject(String id, String key, String name) {
 		this(id, key, name, null, null, true, null, true);
 	}
 
-	public BasicProject(@NotNull String id, @NotNull String key, @NotNull String name,
-			@Nullable Collection<String> defaultReviewers,
-			@Nullable String defaultRepository, boolean allowJoin, Integer defaultDuration, boolean moderatorEnabled) {
+	public BasicProject(String id, String key, String name, Collection<String> defaultReviewers,
+			String defaultRepository, boolean allowJoin, Integer defaultDuration, boolean moderatorEnabled) {
 		this.id = id;
 		this.key = key;
 		this.name = name;
@@ -52,17 +55,14 @@ public class BasicProject implements Serializable {
 		this.moderatorEnabled = moderatorEnabled;
 	}
 
-	@NotNull
-    public String getId() {
+	public String getId() {
 		return id;
 	}
 
-	@NotNull
 	public String getKey() {
 		return key;
 	}
 
-	@NotNull
 	public String getName() {
 		return name;
 	}

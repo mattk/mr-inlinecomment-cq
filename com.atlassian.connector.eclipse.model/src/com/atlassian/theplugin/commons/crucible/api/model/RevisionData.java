@@ -12,7 +12,7 @@
 package com.atlassian.theplugin.commons.crucible.api.model;
 
 import com.atlassian.theplugin.commons.util.MiscUtil;
-import org.jetbrains.annotations.NotNull;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
@@ -25,7 +25,7 @@ public final class RevisionData {
 
 	private final String path;
 
-	public RevisionData(@NotNull String source, @NotNull String path, @NotNull Collection<String> revisions) {
+	public RevisionData(String source, String path, Collection<String> revisions) {
 		this.source = source;
 		this.path = path;
 		this.revisions = MiscUtil.buildHashSet();

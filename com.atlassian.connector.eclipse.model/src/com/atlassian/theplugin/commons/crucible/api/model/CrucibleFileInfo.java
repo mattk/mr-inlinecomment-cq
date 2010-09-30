@@ -19,18 +19,13 @@ package com.atlassian.theplugin.commons.crucible.api.model;
 import com.atlassian.theplugin.commons.VersionedFileInfo;
 import com.atlassian.theplugin.commons.VersionedVirtualFile;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class CrucibleFileInfo implements VersionedFileInfo {
-	@Nullable
 	private VersionedVirtualFile fileDescriptor;
 
-	@Nullable
 	private VersionedVirtualFile oldFileDescriptor;
 
 	private String repositoryName;
@@ -55,8 +50,7 @@ public class CrucibleFileInfo implements VersionedFileInfo {
 		versionedComments = new ArrayList<VersionedComment>();
 	}
 
-	public CrucibleFileInfo(@Nullable VersionedVirtualFile fileDescriptor,
-			@Nullable VersionedVirtualFile oldFileDescriptor, @NotNull PermId permId) {
+	public CrucibleFileInfo(VersionedVirtualFile fileDescriptor, VersionedVirtualFile oldFileDescriptor, PermId permId) {
 		this.fileDescriptor = fileDescriptor;
 		this.oldFileDescriptor = oldFileDescriptor;
 		this.permId = permId;

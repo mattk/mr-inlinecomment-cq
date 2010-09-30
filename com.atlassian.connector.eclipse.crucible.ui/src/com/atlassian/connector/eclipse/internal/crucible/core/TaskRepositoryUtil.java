@@ -12,10 +12,10 @@
 package com.atlassian.connector.eclipse.internal.crucible.core;
 
 import com.atlassian.theplugin.commons.util.MiscUtil;
+import com.sun.istack.internal.NotNull;
+import com.sun.istack.internal.Nullable;
 
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.net.URI;
 import java.util.Map;
@@ -37,7 +37,6 @@ public final class TaskRepositoryUtil {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	@NotNull
 	public static Map<String, String> getScmRepositoryMappings(@NotNull TaskRepository taskRepository) {
 		String property = taskRepository.getProperty(TASK_REPOSITORY_SCM_MAPPINGS_KEY);
 		return MiscUtil.buildHashMap();

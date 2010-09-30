@@ -39,8 +39,6 @@ import org.eclipse.team.core.history.IFileHistoryProvider;
 import org.eclipse.team.core.history.IFileRevision;
 import org.eclipse.team.core.subscribers.Subscriber;
 import org.eclipse.team.core.synchronize.SyncInfo;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.osgi.framework.Bundle;
 
 import java.net.URI;
@@ -192,14 +190,12 @@ public class DefaultTeamUiResourceConnector extends AbstractTeamUiConnector {
 		return false;
 	}
 
-	@NotNull
-	public Collection<UploadItem> getUploadItemsForResources(@NotNull IResource[] resources,
-			@NotNull IProgressMonitor monitor) throws CoreException {
+	public Collection<UploadItem> getUploadItemsForResources(IResource[] resources, IProgressMonitor monitor)
+			throws CoreException {
 		return MiscUtil.buildArrayList();
 	}
 
-	@NotNull
-	public IResource[] getMembersForContainer(@NotNull IContainer element) throws CoreException {
+	public IResource[] getMembersForContainer(IContainer element) throws CoreException {
 		return new IResource[0];
 	}
 
@@ -241,9 +237,7 @@ public class DefaultTeamUiResourceConnector extends AbstractTeamUiConnector {
 		return null;
 	}
 
-	@Nullable
-	public CrucibleFile getCrucibleFileFromReview(@NotNull Review activeReview, @NotNull String fileUrl,
-			@NotNull String revision) {
+	public CrucibleFile getCrucibleFileFromReview(Review activeReview, String fileUrl, String revision) {
 
 		for (CrucibleFileInfo fileInfo : activeReview.getFiles()) {
 			VersionedVirtualFile fileDescriptor = fileInfo.getFileDescriptor();

@@ -13,7 +13,6 @@ package com.atlassian.connector.eclipse.team.ui;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.SortedSet;
 
@@ -29,8 +28,7 @@ public interface ITeamUiResourceConnector2 extends ITeamUiResourceConnector {
 	 * @throws CoreException
 	 *             on any error
 	 */
-	@NotNull
-	SortedSet<ICustomChangesetLogEntry> getLatestChangesets(@NotNull String repositoryUrl, int limit,
-			IProgressMonitor monitor) throws CoreException;
+	SortedSet<ICustomChangesetLogEntry> getLatestChangesets(String repositoryUrl, int limit, IProgressMonitor monitor)
+			throws CoreException;
 
 }

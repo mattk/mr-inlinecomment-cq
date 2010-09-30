@@ -12,7 +12,6 @@
 package com.atlassian.connector.eclipse.internal.crucible.ui;
 
 import com.atlassian.connector.eclipse.internal.crucible.core.CrucibleUtil;
-import com.atlassian.connector.eclipse.internal.crucible.core.client.CrucibleClient;
 import com.atlassian.connector.eclipse.internal.crucible.ui.util.EditorUtil;
 import com.atlassian.connector.eclipse.team.ui.AtlassianTeamUiPlugin;
 import com.atlassian.connector.eclipse.team.ui.CrucibleFile;
@@ -30,6 +29,8 @@ import com.atlassian.theplugin.commons.crucible.api.model.Reviewer;
 import com.atlassian.theplugin.commons.crucible.api.model.User;
 import com.atlassian.theplugin.commons.crucible.api.model.VersionedComment;
 import com.atlassian.theplugin.commons.util.MiscUtil;
+import com.sun.istack.internal.NotNull;
+import com.sun.istack.internal.Nullable;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -46,8 +47,6 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.texteditor.ITextEditor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -78,7 +77,6 @@ public final class CrucibleUiUtil {
 		return null;
 	}
 
-	@Nullable
 	public static TaskRepository getCrucibleTaskRepository(BasicReview review) {
 		if (review != null) {
 			String repositoryUrl = review.getServerUrl();
@@ -89,11 +87,6 @@ public final class CrucibleUiUtil {
 		return null;
 	}
 
-	public static CrucibleClient getClient(BasicReview review) {
-		return CrucibleUiPlugin.getClient(getCrucibleTaskRepository(review));
-	}
-
-	@Nullable
 	public static ITask getCrucibleTask(Review review) {
 		if (review != null) {
 			TaskRepository taskRepository = getCrucibleTaskRepository(review);
@@ -253,13 +246,11 @@ public final class CrucibleUiUtil {
 		return userNames;
 	}
 
-	@NotNull
-	public static Set<Reviewer> getAllCachedUsersAsReviewers(@NotNull TaskRepository taskRepository) {
+	public static Set<Reviewer> getAllCachedUsersAsReviewers(TaskRepository taskRepository) {
 		return toReviewers(CrucibleUiUtil.getCachedUsers(taskRepository));
 	}
 
-	@NotNull
-	public static Set<Reviewer> toReviewers(@NotNull Collection<User> users) {
+	public static Set<Reviewer> toReviewers(Collection<User> users) {
 		Set<Reviewer> allReviewers = new HashSet<Reviewer>();
 		for (User user : users) {
 			allReviewers.add(new Reviewer(user.getUsername(), user.getDisplayName(), false));
@@ -267,8 +258,7 @@ public final class CrucibleUiUtil {
 		return allReviewers;
 	}
 
-	@NotNull
-	public static Set<User> toUsers(@NotNull Collection<Reviewer> users) {
+	public static Set<User> toUsers(Collection<Reviewer> users) {
 		Set<User> res = new HashSet<User>();
 		for (Reviewer user : users) {
 			res.add(new User(user.getUsername(), user.getDisplayName(), user.getAvatarUrl()));
@@ -392,7 +382,6 @@ public final class CrucibleUiUtil {
 		}
 
 		if (matchingFiles.size() > 0) {
-			CrucibleClient client = CrucibleUiUtil.getClient(review);
 			TaskRepository repository = CrucibleUiUtil.getCrucibleTaskRepository(review);
 
 			for (final CrucibleFile cruFile : matchingFiles) {

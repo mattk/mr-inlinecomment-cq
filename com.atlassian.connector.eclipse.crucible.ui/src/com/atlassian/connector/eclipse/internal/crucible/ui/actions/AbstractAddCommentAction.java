@@ -12,7 +12,6 @@
 package com.atlassian.connector.eclipse.internal.crucible.ui.actions;
 
 import com.atlassian.connector.eclipse.internal.crucible.core.CrucibleUtil;
-import com.atlassian.connector.eclipse.internal.crucible.core.client.CrucibleClient;
 import com.atlassian.connector.eclipse.internal.crucible.ui.CrucibleUiPlugin;
 import com.atlassian.connector.eclipse.internal.crucible.ui.CrucibleUiUtil;
 import com.atlassian.connector.eclipse.internal.crucible.ui.ICrucibleFileProvider;
@@ -30,9 +29,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.text.source.LineRange;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.ui.IEditorInput;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Abstract class to deal with adding comments to a review
@@ -52,8 +49,7 @@ public abstract class AbstractAddCommentAction extends AbstractReviewAction {
 
 		private final LineRange commentLines;
 
-		public GetCrucibleFileJob(String name, @NotNull IEditorInput editorInput, LineRange commentLines,
-				@NotNull Review review) {
+		public GetCrucibleFileJob(String name, IEditorInput editorInput, LineRange commentLines, Review review) {
 			super(name);
 			this.editorInput = editorInput;
 			this.commentLines = commentLines;
@@ -115,32 +111,33 @@ public abstract class AbstractAddCommentAction extends AbstractReviewAction {
 		LineRange commentLines = getSelectedRange();
 		CrucibleFile crucibleFile = getCrucibleFile();
 
-		CrucibleClient client = CrucibleUiPlugin.getClient(getTaskRepository());
-		if (client == null) {
-			StatusHandler.log(new Status(IStatus.ERROR, CrucibleUiPlugin.PLUGIN_ID,
-					"Unable to get client, please try to refresh"));
-			return;
-		}
-
-		commentDialog = new CrucibleAddFileAddCommentDialog(WorkbenchUtil.getShell(), getDialogTitle(), review,
-				getTaskKey(), getTaskId(), getTaskRepository(), client);
-
-		if (crucibleFile != null) {
-			openDialog(crucibleFile, commentLines);
-		} else {
-			if (getEditorInput() == null) {
-				StatusHandler.log(new Status(IStatus.ERROR, CrucibleUiPlugin.PLUGIN_ID,
-						"Unable to determine crucible file. EditorInput object is null"));
-				return;
-			}
-
-			GetCrucibleFileJob getCrucibleFileJob = new GetCrucibleFileJob("Getting Crucible file data",
-					getEditorInput(), commentLines, review);
-
-			getCrucibleFileJob.setUser(true);
-			getCrucibleFileJob.schedule();
-
-		}
+// TODO save review
+//		CrucibleClient client = CrucibleUiPlugin.getClient(getTaskRepository());
+//		if (client == null) {
+//			StatusHandler.log(new Status(IStatus.ERROR, CrucibleUiPlugin.PLUGIN_ID,
+//					"Unable to get client, please try to refresh"));
+//			return;
+//		}
+//
+//		commentDialog = new CrucibleAddFileAddCommentDialog(WorkbenchUtil.getShell(), getDialogTitle(), review,
+//				getTaskKey(), getTaskId(), getTaskRepository(), client);
+//
+//		if (crucibleFile != null) {
+//			openDialog(crucibleFile, commentLines);
+//		} else {
+//			if (getEditorInput() == null) {
+//				StatusHandler.log(new Status(IStatus.ERROR, CrucibleUiPlugin.PLUGIN_ID,
+//						"Unable to determine crucible file. EditorInput object is null"));
+//				return;
+//			}
+//
+//			GetCrucibleFileJob getCrucibleFileJob = new GetCrucibleFileJob("Getting Crucible file data",
+//					getEditorInput(), commentLines, review);
+//
+//			getCrucibleFileJob.setUser(true);
+//			getCrucibleFileJob.schedule();
+//
+//		}
 	}
 
 	private void openDialog(IResource resource, LineRange commentLines) {

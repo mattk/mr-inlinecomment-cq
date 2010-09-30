@@ -11,12 +11,6 @@
 
 package com.atlassian.theplugin.commons.crucible.api.model;
 
-import com.atlassian.theplugin.commons.util.MiscUtil;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
 
@@ -31,29 +25,21 @@ import java.util.Set;
 public class BasicReview {
 	private Set<Reviewer> reviewers;
 
-	private Set<CrucibleAction> transitions = MiscUtil.buildHashSet();
-
-	private Set<CrucibleAction> actions = MiscUtil.buildHashSet();
-
-	@NotNull
 	private User author;
 
 	private User creator;
 
 	private String description;
 
-	@Nullable
 	private User moderator;
 
 	private String name;
 
 	/** this field seems to be not initialized by ACC at all */
-	@Nullable
 	private PermId parentReview;
 
 	private PermId permId;
 
-	@NotNull
 	private String projectKey;
 
 	private String repoName;
@@ -68,7 +54,6 @@ public class BasicReview {
 
 	private Date closeDate;
 
-	@Nullable
 	private Date dueDate;
 
 	private String summary;
@@ -77,8 +62,7 @@ public class BasicReview {
 
 	private final ReviewType type;
 
-	public BasicReview(@NotNull ReviewType type, @NotNull String serverUrl, @NotNull String projectKey,
-			@NotNull User author, @Nullable User moderator) {
+	public BasicReview(ReviewType type, String serverUrl, String projectKey, User author, User moderator) {
 		this.type = type;
 		this.serverUrl = serverUrl;
 		this.projectKey = projectKey;
@@ -94,34 +78,16 @@ public class BasicReview {
 		this.reviewers = reviewers;
 	}
 
-	public void setTransitions(@NotNull Collection<CrucibleAction> transitions) {
-		this.transitions = MiscUtil.buildHashSet(transitions);
-	}
-
-	public void setActions(@NotNull Set<CrucibleAction> actions) {
-		this.actions = MiscUtil.buildHashSet(actions);
-	}
-
-	public void setAuthor(@NotNull final User author) {
+	public void setAuthor(final User author) {
 		this.author = author;
 	}
 
-	@NotNull
 	public String getServerUrl() {
 		return serverUrl;
 	}
 
 	public Set<Reviewer> getReviewers() {
 		return reviewers;
-	}
-
-	public Set<CrucibleAction> getTransitions() {
-		return transitions;
-	}
-
-	@NotNull
-	public Set<CrucibleAction> getActions() {
-		return actions;
 	}
 
 	public boolean isCompleted() {
@@ -134,7 +100,6 @@ public class BasicReview {
 		return true;
 	}
 
-	@NotNull
 	public User getAuthor() {
 		return author;
 	}
@@ -171,7 +136,6 @@ public class BasicReview {
 		this.name = value;
 	}
 
-	@Nullable
 	public PermId getParentReview() {
 		return parentReview;
 	}
@@ -180,7 +144,6 @@ public class BasicReview {
 		this.parentReview = value;
 	}
 
-	@Nullable
 	public PermId getPermId() {
 		return permId;
 	}
@@ -189,16 +152,14 @@ public class BasicReview {
 		this.permId = value;
 	}
 
-	@NotNull
 	public String getProjectKey() {
 		return projectKey;
 	}
 
-	public void setProjectKey(@NotNull String value) {
+	public void setProjectKey(String value) {
 		this.projectKey = value;
 	}
 
-	@Nullable
 	public String getRepoName() {
 		return repoName;
 	}
@@ -207,7 +168,6 @@ public class BasicReview {
 		this.repoName = value;
 	}
 
-	@Nullable
 	public State getState() {
 		return state;
 	}

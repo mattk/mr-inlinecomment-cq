@@ -34,8 +34,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 
@@ -96,7 +94,6 @@ public final class TeamUiUtils {
 		return true;
 	}
 
-	@Nullable
 	public static IResource findResourceForPath(String repoUrl, String filePath, IProgressMonitor monitor) {
 		IPath path = new Path(filePath);
 		final IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(path);
@@ -145,8 +142,7 @@ public final class TeamUiUtils {
 		return null;
 	}
 
-	@Nullable
-	public static ScmRepository getApplicableRepository(@NotNull IResource resource) {
+	public static ScmRepository getApplicableRepository(IResource resource) {
 		TeamUiResourceManager teamResourceManager = AtlassianTeamUiPlugin.getDefault().getTeamResourceManager();
 
 		for (ITeamUiResourceConnector connector : teamResourceManager.getTeamConnectors()) {
@@ -166,7 +162,7 @@ public final class TeamUiUtils {
 
 	}
 
-	public static LocalStatus getLocalRevision(@NotNull IResource resource) throws CoreException {
+	public static LocalStatus getLocalRevision(IResource resource) throws CoreException {
 		ITeamUiResourceConnector connector = AtlassianTeamUiPlugin.getDefault()
 				.getTeamResourceManager()
 				.getTeamConnector(resource);
@@ -218,7 +214,6 @@ public final class TeamUiUtils {
 	 *            progress monitor
 	 * @return all supported repositories configured in current workspace
 	 */
-	@NotNull
 	public static Collection<ScmRepository> getRepositories(IProgressMonitor monitor) {
 		TeamUiResourceManager teamResourceManager = AtlassianTeamUiPlugin.getDefault().getTeamResourceManager();
 		Collection<ScmRepository> res = MiscUtil.buildArrayList();

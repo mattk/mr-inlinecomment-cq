@@ -32,7 +32,7 @@ import org.eclipse.swt.widgets.Composite;
 import java.util.Collection;
 import java.util.Set;
 
-public class DefineRepositoryMappingsPage extends WizardPage {
+class DefineRepositoryMappingsPage extends WizardPage {
 
 	private final TaskRepository taskRepository;
 

@@ -18,7 +18,7 @@ package com.atlassian.theplugin.commons.crucible.api.model;
 
 import com.atlassian.connector.commons.misc.IntRanges;
 import com.atlassian.theplugin.commons.util.MiscUtil;
-import org.jetbrains.annotations.NotNull;
+
 import java.util.Map;
 
 public class VersionedComment extends Comment {
@@ -40,9 +40,8 @@ public class VersionedComment extends Comment {
 
 	private IntRanges fromLineRanges;
 
-    private Map<String, IntRanges> lineRanges;
+	private Map<String, IntRanges> lineRanges;
 
-	@NotNull
 	private final CrucibleFileInfo crucibleFileInfo;
 
 	public VersionedComment(VersionedComment bean) {
@@ -60,12 +59,11 @@ public class VersionedComment extends Comment {
 		this.crucibleFileInfo = bean.crucibleFileInfo;
 	}
 
-	public VersionedComment(Review review, @NotNull CrucibleFileInfo crucibleFileInfo) {
+	public VersionedComment(Review review, CrucibleFileInfo crucibleFileInfo) {
 		super(review, null); // I assume that versioned comments are always root comments (not replies)
 		this.crucibleFileInfo = crucibleFileInfo;
 	}
 
-	@NotNull
 	public CrucibleFileInfo getCrucibleFileInfo() {
 		return crucibleFileInfo;
 	}
@@ -118,15 +116,15 @@ public class VersionedComment extends Comment {
 		return toLineRanges;
 	}
 
-    public Map<String, IntRanges> getLineRanges() {
-        return lineRanges;
-    }
+	public Map<String, IntRanges> getLineRanges() {
+		return lineRanges;
+	}
 
-    public void setLineRanges(Map<String, IntRanges> lineRanges) {
-        this.lineRanges = lineRanges;
-    }
+	public void setLineRanges(Map<String, IntRanges> lineRanges) {
+		this.lineRanges = lineRanges;
+	}
 
-    public void setToLineRanges(IntRanges toLineRanges) {
+	public void setToLineRanges(IntRanges toLineRanges) {
 		this.toLineRanges = toLineRanges;
 		setToLineInfo(true);
 		setToStartLine(toLineRanges.getTotalMin());
@@ -270,9 +268,9 @@ public class VersionedComment extends Comment {
 			return false;
 		}
 
-        if (lineRangesNotEqual(that.lineRanges)) {
-            return false;
-        }
+		if (lineRangesNotEqual(that.lineRanges)) {
+			return false;
+		}
 
 		if (getReplies() != null ? !getReplies().equals(that.getReplies()) : that.getReplies() != null) {
 			return false;
@@ -301,17 +299,17 @@ public class VersionedComment extends Comment {
 		return true;
 	}
 
-    private boolean lineRangesNotEqual(Map<String, IntRanges> thatLineRanges) {
-        if (lineRanges == null && thatLineRanges == null) {
-            return true;
-        }
-        if (lineRanges == null) {
-            return false;
-        }
-        if (thatLineRanges == null) {
-            return false;
-        }
-        return lineRanges.equals(thatLineRanges);
-    }
+	private boolean lineRangesNotEqual(Map<String, IntRanges> thatLineRanges) {
+		if (lineRanges == null && thatLineRanges == null) {
+			return true;
+		}
+		if (lineRanges == null) {
+			return false;
+		}
+		if (thatLineRanges == null) {
+			return false;
+		}
+		return lineRanges.equals(thatLineRanges);
+	}
 
 }

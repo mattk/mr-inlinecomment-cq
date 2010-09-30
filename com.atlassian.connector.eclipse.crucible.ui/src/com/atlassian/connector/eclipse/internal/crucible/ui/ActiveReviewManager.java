@@ -12,29 +12,15 @@
 package com.atlassian.connector.eclipse.internal.crucible.ui;
 
 import com.atlassian.connector.eclipse.internal.crucible.core.CrucibleConstants;
-import com.atlassian.connector.eclipse.internal.crucible.core.client.CrucibleClient;
-import com.atlassian.connector.eclipse.internal.crucible.core.client.model.IReviewCacheListener;
-import com.atlassian.connector.eclipse.internal.crucible.ui.annotations.CrucibleAnnotationModelManager;
 import com.atlassian.theplugin.commons.crucible.api.model.Review;
-import com.atlassian.theplugin.commons.crucible.api.model.notification.CrucibleNotification;
 import com.atlassian.theplugin.commons.util.MiscUtil;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
-import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskActivationListener;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -46,7 +32,7 @@ import java.util.Set;
  * 
  * @author sminto
  */
-public class ActiveReviewManager implements ITaskActivationListener, IReviewCacheListener {
+public class ActiveReviewManager implements ITaskActivationListener {
 
 	/**
 	 * All methods are never called from UI thread.
@@ -58,7 +44,6 @@ public class ActiveReviewManager implements ITaskActivationListener, IReviewCach
 
 		void reviewDeactivated(ITask task, Review review);
 
-		void reviewUpdated(ITask task, Review review, Collection<CrucibleNotification> differences);
 	};
 
 	private static final long ACTIVE_REVIEW_POLLING_INTERVAL = 120000L;
@@ -108,13 +93,6 @@ public class ActiveReviewManager implements ITaskActivationListener, IReviewCach
 		}
 	}
 
-	private synchronized void fireReviewUpdated(final ITask task, final Review review,
-			Collection<CrucibleNotification> differences) {
-		for (final IReviewActivationListener l : activationListeners) {
-			l.reviewUpdated(task, review, differences);
-		}
-	}
-
 	public void dispose() {
 	}
 
@@ -153,21 +131,6 @@ public class ActiveReviewManager implements ITaskActivationListener, IReviewCach
 		// ignore
 	}
 
-	private synchronized void activeReviewUpdated(Review cachedReview, ITask task,
-			Collection<CrucibleNotification> differences) {
-		if (activeTask != null && task != null && activeTask.equals(task)) {
-			reviewByTask.put(task, cachedReview);
-			if (activeReview == null) {
-				this.activeReview = cachedReview;
-				fireReviewActivated(activeTask, activeReview);
-			} else {
-				this.activeReview = cachedReview;
-				CrucibleAnnotationModelManager.updateAllOpenEditors(activeReview);
-				fireReviewUpdated(activeTask, activeReview, differences);
-			}
-		}
-	}
-
 	public synchronized Review getActiveReview() {
 		return activeReview;
 	}
@@ -201,46 +164,6 @@ public class ActiveReviewManager implements ITaskActivationListener, IReviewCach
 	}
 
 	private void scheduleDownloadJob(final ITask task) {
-		Job downloadJob = new Job("Retrieving review from server") {
-
-			@Override
-			protected IStatus run(IProgressMonitor monitor) {
-				IStatus errorStatus = null;
-				try {
-					TaskRepository repository = CrucibleUiUtil.getCrucibleTaskRepository(task.getRepositoryUrl());
-
-					if (repository != null) {
-						String taskId = task.getTaskId();
-
-						CrucibleClient client = CrucibleUiPlugin.getClient(repository);
-						if (client != null) {
-							// This should fire off a listener that we listen to to update the review properly
-							client.getReview(repository, taskId, false, monitor);
-						} else {
-							errorStatus = new Status(IStatus.ERROR, CrucibleUiPlugin.PLUGIN_ID,
-									"Unable to get crucible client for repository");
-
-						}
-					} else {
-						errorStatus = new Status(IStatus.ERROR, CrucibleUiPlugin.PLUGIN_ID,
-								"Crucible repository does not exist");
-
-					}
-				} catch (CoreException e) {
-					errorStatus = e.getStatus();
-
-				} finally {
-					if (errorStatus != null && !errorStatus.isOK()) {
-						StatusHandler.log(errorStatus);
-						TasksUiInternal.asyncDisplayStatus("Unable to retrieve Review", errorStatus);
-					}
-				}
-				return Status.OK_STATUS;
-			}
-		};
-		downloadJob.setUser(true);
-		downloadJob.setPriority(Job.INTERACTIVE);
-		downloadJob.schedule();
 	}
 
 	public synchronized boolean isReviewActive() {
@@ -248,20 +171,6 @@ public class ActiveReviewManager implements ITaskActivationListener, IReviewCach
 	}
 
 	public void reviewAdded(String repositoryUrl, String taskId, Review review) {
-		if (activeTask != null) {
-			if (activeTask.getRepositoryUrl().equals(repositoryUrl) && activeTask.getTaskId().equals(taskId)) {
-				activeReviewUpdated(review, activeTask, Collections.<CrucibleNotification> emptyList());
-			}
-		}
-	}
-
-	public synchronized void reviewUpdated(String repositoryUrl, String taskId, Review review,
-			List<CrucibleNotification> differences) {
-		if (activeTask != null) {
-			if (activeTask.getRepositoryUrl().equals(repositoryUrl) && activeTask.getTaskId().equals(taskId)) {
-				activeReviewUpdated(review, activeTask, differences);
-			}
-		}
 	}
 
 	/**
@@ -275,7 +184,4 @@ public class ActiveReviewManager implements ITaskActivationListener, IReviewCach
 		this.activeReview = review;
 	}
 
-	public void activeReviewUpdated() {
-		activeReviewUpdated(activeReview, activeTask, Collections.<CrucibleNotification> emptyList());
-	}
 }

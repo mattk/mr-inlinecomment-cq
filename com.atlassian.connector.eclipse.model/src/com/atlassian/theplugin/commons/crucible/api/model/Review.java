@@ -16,9 +16,6 @@
 
 package com.atlassian.theplugin.commons.crucible.api.model;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -35,20 +32,18 @@ public class Review extends BasicReview {
 
 	private List<Comment> generalComments = new ArrayList<Comment>();
 
-	public Review(@NotNull String serverUrl, @NotNull String projectKey, @NotNull User author, @Nullable User moderator) {
+	public Review(String serverUrl, String projectKey, User author, User moderator) {
 		this(ReviewType.REVIEW, serverUrl, projectKey, author, moderator);
 	}
 
-	public Review(@NotNull ReviewType type, @NotNull String serverUrl, @NotNull String projectKey,
-			@NotNull User author, @Nullable User moderator) {
+	public Review(ReviewType type, String serverUrl, String projectKey, User author, User moderator) {
 		super(type, serverUrl, projectKey, author, moderator);
 	}
 
-	public void setGeneralComments(@NotNull List<Comment> generalComments) {
+	public void setGeneralComments(List<Comment> generalComments) {
 		this.generalComments = generalComments;
 	}
 
-	@NotNull
 	public List<Comment> getGeneralComments() {
 		return generalComments;
 	}
@@ -101,7 +96,6 @@ public class Review extends BasicReview {
 		}
 	}
 
-	@Nullable
 	public CrucibleFileInfo getFileByPermId(PermId id) {
 		for (CrucibleFileInfo f : getFiles()) {
 			if (f.getPermId().equals(id)) {
@@ -115,7 +109,7 @@ public class Review extends BasicReview {
 		return files;
 	}
 
-	public void setFiles(@NotNull final Set<CrucibleFileInfo> files) {
+	public void setFiles(final Set<CrucibleFileInfo> files) {
 		this.files = files;
 	}
 

@@ -11,7 +11,6 @@
 
 package com.atlassian.connector.eclipse.internal.crucible.ui.dialogs;
 
-import com.atlassian.connector.eclipse.internal.crucible.core.client.CrucibleClient;
 import com.atlassian.connector.eclipse.internal.crucible.ui.CrucibleUiPlugin;
 import com.atlassian.connector.eclipse.internal.crucible.ui.CrucibleUiUtil;
 import com.atlassian.connector.eclipse.team.ui.CrucibleFile;
@@ -76,8 +75,8 @@ public class CrucibleAddFileAddCommentDialog extends CrucibleAddCommentDialog {
 	private DecoratedResource decoratedResource;
 
 	public CrucibleAddFileAddCommentDialog(Shell shell, String dialogTitle, Review review, String taskKey,
-			String taskId, TaskRepository taskRepository, CrucibleClient client) {
-		super(shell, dialogTitle, review, taskKey, taskId, taskRepository, client);
+			String taskId, TaskRepository taskRepository) {
+		super(shell, dialogTitle, review, taskKey, taskId, taskRepository);
 		this.review = review;
 	}
 

@@ -12,21 +12,15 @@
 package com.atlassian.connector.eclipse.internal.crucible.ui.actions;
 
 import com.atlassian.connector.eclipse.internal.crucible.core.CrucibleUtil;
-import com.atlassian.connector.eclipse.internal.crucible.core.client.CrucibleClient;
 import com.atlassian.connector.eclipse.internal.crucible.ui.CrucibleUiPlugin;
 import com.atlassian.connector.eclipse.internal.crucible.ui.CrucibleUiUtil;
 import com.atlassian.connector.eclipse.internal.crucible.ui.IReviewAction;
 import com.atlassian.connector.eclipse.internal.crucible.ui.IReviewActionListener;
-import com.atlassian.connector.eclipse.internal.crucible.ui.dialogs.CrucibleAddCommentDialog;
 import com.atlassian.theplugin.commons.crucible.api.model.Comment;
 import com.atlassian.theplugin.commons.crucible.api.model.Review;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchUtil;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
@@ -61,22 +55,23 @@ public class ReplyToCommentAction extends BaseSelectionListenerAction implements
 	public void run() {
 		TaskRepository taskRepository = CrucibleUiUtil.getCrucibleTaskRepository(review);
 		ITask task = CrucibleUiUtil.getCrucibleTask(review);
-		CrucibleClient client = CrucibleUiPlugin.getClient(taskRepository);
-		if (client == null) {
-			StatusHandler.log(new Status(IStatus.ERROR, CrucibleUiPlugin.PLUGIN_ID,
-					"Unable to get client, please try to refresh"));
-			return;
-		}
-
-		CrucibleAddCommentDialog commentDialog = new CrucibleAddCommentDialog(WorkbenchUtil.getShell(),
-				REPLY_TO_COMMENT, review, task.getTaskKey(), task.getTaskId(), taskRepository, client);
-
-		commentDialog.setParentComment((Comment) getStructuredSelection().getFirstElement());
-		commentDialog.open();
-
-		if (actionListener != null) {
-			actionListener.actionRan(this);
-		}
+		// TODO fix client
+//		CrucibleClient client = CrucibleUiPlugin.getClient(taskRepository);
+//		if (client == null) {
+//			StatusHandler.log(new Status(IStatus.ERROR, CrucibleUiPlugin.PLUGIN_ID,
+//					"Unable to get client, please try to refresh"));
+//			return;
+//		}
+//
+//		CrucibleAddCommentDialog commentDialog = new CrucibleAddCommentDialog(WorkbenchUtil.getShell(),
+//				REPLY_TO_COMMENT, review, task.getTaskKey(), task.getTaskId(), taskRepository, client);
+//
+//		commentDialog.setParentComment((Comment) getStructuredSelection().getFirstElement());
+//		commentDialog.open();
+//
+//		if (actionListener != null) {
+//			actionListener.actionRan(this);
+//		}
 	}
 
 	@Override

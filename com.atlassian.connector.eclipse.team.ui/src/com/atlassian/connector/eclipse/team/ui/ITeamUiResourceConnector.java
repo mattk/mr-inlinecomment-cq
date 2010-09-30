@@ -19,8 +19,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -47,8 +45,7 @@ public interface ITeamUiResourceConnector {
 	 * @return null if operation is not handled/supported, otherwise revision info
 	 * @throws CoreException
 	 */
-	@Nullable
-	LocalStatus getLocalRevision(@NotNull IResource resource) throws CoreException;
+	LocalStatus getLocalRevision(IResource resource) throws CoreException;
 
 	/**
 	 * @param resource
@@ -56,14 +53,12 @@ public interface ITeamUiResourceConnector {
 	 * @return <code>null</code> if this connector does not support given {@link IResource}
 	 * @throws CoreException
 	 */
-	@Nullable
-	ScmRepository getApplicableRepository(@NotNull IResource resource) throws CoreException;
+	ScmRepository getApplicableRepository(IResource resource) throws CoreException;
 
 	/**
 	 * 
 	 * @return human friendly name of this connector (used for instance in error messages)
 	 */
-	@NotNull
 	String getName();
 
 	/**
@@ -73,7 +68,7 @@ public interface ITeamUiResourceConnector {
 	 * @param filter
 	 * @return true if given roots (or their children) match given state
 	 */
-	boolean haveMatchingResourcesRecursive(@NotNull IResource[] roots, State filter);
+	boolean haveMatchingResourcesRecursive(IResource[] roots, State filter);
 
 	/**
 	 * Gets all resources matching filter (also their members, and members their members)
@@ -82,14 +77,12 @@ public interface ITeamUiResourceConnector {
 	 * @param filter
 	 * @return
 	 */
-	List<IResource> getResourcesByFilterRecursive(@NotNull IResource[] roots, State filter);
+	List<IResource> getResourcesByFilterRecursive(IResource[] roots, State filter);
 
-	@NotNull
-	Collection<UploadItem> getUploadItemsForResources(@NotNull IResource[] resources, @NotNull IProgressMonitor monitor)
+	Collection<UploadItem> getUploadItemsForResources(IResource[] resources, IProgressMonitor monitor)
 			throws CoreException;
 
-	@NotNull
-	IResource[] getMembersForContainer(@NotNull IContainer element) throws CoreException;
+	IResource[] getMembersForContainer(IContainer element) throws CoreException;
 
 	/**
 	 * 
@@ -108,20 +101,16 @@ public interface ITeamUiResourceConnector {
 	 * @param revision
 	 * @return
 	 */
-	@Nullable
-	CrucibleFile getCrucibleFileFromReview(@NotNull Review activeReview, @NotNull String fileUrl,
-			@NotNull String revision);
+	CrucibleFile getCrucibleFileFromReview(Review activeReview, String fileUrl, String revision);
 
 	/**
 	 */
-	@Nullable
-	CrucibleFile getCrucibleFileFromReview(@NotNull Review activeReview, @NotNull IFile file);
+	CrucibleFile getCrucibleFileFromReview(Review activeReview, IFile file);
 
 	/**
 	 * @param monitor
 	 * @return repositories applicable for the current workspace
 	 */
-	@NotNull
 	Collection<ScmRepository> getRepositories(IProgressMonitor monitor);
 
 	boolean isResourceAcceptedByFilter(IResource resource, State state);

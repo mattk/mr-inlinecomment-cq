@@ -11,11 +11,11 @@
 
 package com.atlassian.connector.eclipse.internal.crucible.ui.dialogs;
 
-import com.atlassian.connector.eclipse.internal.crucible.core.client.CrucibleClient;
 import com.atlassian.connector.eclipse.ui.dialogs.ProgressDialog;
 import com.atlassian.theplugin.commons.crucible.api.model.Review;
 import com.atlassian.theplugin.commons.crucible.api.model.Reviewer;
 import com.atlassian.theplugin.commons.crucible.api.model.User;
+
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -26,19 +26,26 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 public abstract class AbstractCrucibleReviewActionDialog extends ProgressDialog {
 
 	protected final Review review;
+
 	protected Review updatedReview;
+
 	protected final String userName;
+
 	protected final TaskRepository taskRepository;
+
 	protected final String taskKey;
+
 	protected final String taskId;
-	protected final CrucibleClient client;
+
 	protected boolean discardDrafts = false;
+
 	private final String actionText;
 
 	public String getTaskKey() {
@@ -46,14 +53,13 @@ public abstract class AbstractCrucibleReviewActionDialog extends ProgressDialog 
 	}
 
 	public AbstractCrucibleReviewActionDialog(Shell parentShell, Review review, String userName,
-			TaskRepository taskRepository, String taskKey, String taskId, CrucibleClient client, String actionText) {
+			TaskRepository taskRepository, String taskKey, String taskId, String actionText) {
 		super(parentShell);
 		this.review = review;
 		this.userName = userName;
 		this.taskRepository = taskRepository;
 		this.taskKey = taskKey;
 		this.taskId = taskId;
-		this.client = client;
 		this.actionText = actionText;
 	}
 
@@ -72,16 +78,16 @@ public abstract class AbstractCrucibleReviewActionDialog extends ProgressDialog 
 	public void handleUserDrafts(Composite draftComp) {
 		boolean hasDrafts = checkForDrafts();
 		if (hasDrafts) {
-			GridDataFactory.fillDefaults().grab(true, false).applyTo(
-					new Label(draftComp, SWT.SEPARATOR | SWT.HORIZONTAL));
+			GridDataFactory.fillDefaults()
+					.grab(true, false)
+					.applyTo(new Label(draftComp, SWT.SEPARATOR | SWT.HORIZONTAL));
 			final Label draftComments = new Label(draftComp, SWT.NONE);
 			final int numDraftComments = review.getNumberOfGeneralCommentsDrafts()
 					+ review.getNumberOfVersionedCommentsDrafts();
 			final String commentStr = numDraftComments == 1 ? "comment" : "comments";
 
-			draftComments.setText("You have " + numDraftComments + " draft "
-					+ commentStr + ". " + "Draft comments that aren't posted will be deleted.\n"
-					+ "Please choose an action:");
+			draftComments.setText("You have " + numDraftComments + " draft " + commentStr + ". "
+					+ "Draft comments that aren't posted will be deleted.\n" + "Please choose an action:");
 			GridDataFactory.fillDefaults().span(2, 1).applyTo(draftComments);
 
 			Button deleteDrafts = new Button(draftComp, SWT.RADIO);
